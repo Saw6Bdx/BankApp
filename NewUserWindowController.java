@@ -1,13 +1,14 @@
 package jfxui;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
@@ -15,6 +16,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.stage.Stage;
 
+import projetJava.Holder;
+import projetJava.Login;
+import utils.Valid;
+
+/**
+ *  
+ * @author Mary
+ */
 public class NewUserWindowController {
     
     @FXML private TextField txtName;
@@ -36,31 +45,83 @@ public class NewUserWindowController {
         String phone = txtPhone.getText();
         String email = txtEmail.getText();
         String birthday = txtBirthday.getEditor().getText();
+        
         String login = txtLogin.getText();
         String pwd = txtPwd.getText();
         String pwdConfirm = txtConfirmPwd.getText();
         
-        if ( checkLetters(name,"name") && checkLetters(firstName, "first name") && 
-                checkDate(birthday) && checkPhoneNumber(phone) && 
-                checkEmail(email) && checkPwd(pwd, pwdConfirm) ) {
-          
-            birthday = convFormatDate(birthday); // convert from dd/MM/yyyy to yyyy-MM-dd
-            
-            // Add informations to the BDD
-            /* NOT IMPLEMENTED */
-            
-            // Going to the application main page
-            TitledPane loader = (TitledPane)FXMLLoader.load(getClass().getResource("AppWindow.fxml"));
-            Scene scene = new Scene(loader);
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.show();
-        
-            //Close current window
-            Stage current = (Stage)btnCreate.getScene().getWindow();
-            current.close();
-           
+        // Convert birthday date from dd/MM/yyyy to yyyy-MM-dd
+        if ( Valid.isValidDate(birthday) ) {
+            birthday = convFormatDate(birthday);
+            SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date d = dateParser.parse(birthday);
+            } catch (ParseException ex) {
+            }
         }
+        else {
+            alertMessage("date","Date field cannot be empty");
+        }
+        
+        // Check the fields
+        if ( Valid.isValidLetters(name, "name") ) {
+            if ( Valid.isValidLetters(firstName, "first name") ) {
+                if ( Valid.isValidPhoneNumber(phone) ) {
+                    if ( Valid.isValidEmail(email) ) {
+                        
+                        // Creating Holder object
+                        Holder h = new Holder(name,firstName,phone,email,new Date(0));
+                        
+                        if (Valid.isValidPwd(pwd, pwdConfirm)) {
+                            
+                            // Creating Login object
+                            Login l = new Login(login,pwd);
+                            
+                            // Going to the application main page
+                            TitledPane loader = (TitledPane)FXMLLoader.load(getClass().getResource("AppWindow.fxml"));
+                            Scene scene = new Scene(loader);
+                            Stage stage = new Stage();
+                            stage.setScene(scene);
+                            stage.show();
+
+                            //Close current window
+                            Stage current = (Stage)btnCreate.getScene().getWindow();
+                            current.close();
+                        
+                        }
+                        else {
+                            alertMessage("password","password and its confirmation do not match");
+                        }
+                    }
+                    else {
+                        alertMessage("e-mail","Must contains an @");
+                    }
+                }
+                else {
+                    alertMessage("phone","Characters allowed : numbers and +");
+                    System.out.println("Wrong phone");
+                }
+            }
+            else {
+                alertMessage("first name","Only letters and hyphen allowed");
+            }
+        } 
+        else {
+            alertMessage("name","Only letters and apostrophe allowed");
+        }
+        
+    }
+    
+    /**
+     * Method 
+     * @param date in dd/MM/yyyy format
+     * @return date in yyyy-mm-dd format
+     */
+    private void alertMessage(String field, String message) {
+        new Alert(
+                Alert.AlertType.WARNING,
+                String.format("Invalid %s format\n %s",field,message)
+            ).showAndWait();
     }
     
     /**
@@ -77,77 +138,7 @@ public class NewUserWindowController {
                 result = result.concat("-");
             }
         }
-        System.out.println(result);
         return result;
-    }
-    
-    /**
-     * Method which checks the name format (if it contains only letters)
-     * @param field, the field to be checked 
-     * @param nameField, the name of the field to be checked
-     * @return true if the field is in the good format, false otherwise
-     */
-    private boolean checkLetters(String field, String nameField) {
-        if ( field.matches("[a-zA-Z]+") ) {
-            return true;
-        }
-        new Alert(
-                AlertType.WARNING,
-                String.format("Invalid %s format\n Only letters allowed",nameField)
-        ).showAndWait();
-        return false;
-    }
-    
-    /**
-     * Method which checks the phone number format (if it contains only numbers or +)
-     * @param phone, the field to be checked 
-     * @return true if the field is in the good format, false otherwise
-     */
-    private boolean checkPhoneNumber(String phone) {
-        if ( phone.matches("[0-9]+") && phone.length() >= 10 ) { // vérifier qu'il y ait un + ?
-            return true;
-        }
-        new Alert(AlertType.WARNING,"Invalid phone number format\n Characters allowed : numbers and + ").showAndWait();
-        return false;
-    }
-    
-    /**
-     * Method which checks the e-mail number format (if it contains one @)
-     * @param email, the field to be checked
-     * @return true if the field is in the good format, false otherwise
-     */
-    private boolean checkEmail(String email) {
-        if ( email.matches(".*@.*") ) {
-            return true;
-        }
-        new Alert(AlertType.WARNING,"Invalid e-mail format\n Must contains an @").showAndWait();
-        return false;
-    }
-    
-    /**
-     * Method which checks the date
-     * @param field, the field to be checked 
-     * @return true if the field is not empty, false otherwise
-     */
-    private boolean checkDate(String date) {
-        if (!date.isEmpty()) {
-            return true;
-        }
-        new Alert(AlertType.WARNING, "date field cannot be empty").showAndWait();
-        return false;
-    }
-    
-    /**
-     * Method which checks if the password and its confirmation match
-     * @param pwd, pwdConfirmation the field to be checked
-     * @return true if fields match, false otherwise
-     */
-    private boolean checkPwd(String pwd, String pwdConfirmation) {
-        if ( pwd.equals(pwdConfirmation) ) {
-            return true;
-        }
-        new Alert(AlertType.WARNING,"Password and its confirmation does not match").showAndWait();
-        return false;
     }
     
     @FXML

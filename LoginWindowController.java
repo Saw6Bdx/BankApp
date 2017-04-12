@@ -48,6 +48,7 @@ private void handleMenuFileQuit(ActionEvent event){
             TitledPane loader = (TitledPane)FXMLLoader.load(getClass().getResource("NewUserWindow.fxml"));
             Scene scene = new Scene(loader);
             Stage stage = new Stage();
+            stage.setResizable(false);
             stage.setScene(scene);
             stage.show();
             //Hide current window

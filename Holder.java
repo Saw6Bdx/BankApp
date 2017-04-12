@@ -5,12 +5,12 @@ import java.util.Date;
 import utils.Check;
 
 /**
- * Vérifier 
+ *  
  * @author Mary
  */
 public class Holder {
 
-    public Holder(String name, String firstName, Date date, String phone) {
+    public Holder(String name, String firstName, String phone, String email, Date date) {
         
         Check.checkIsEmpty(name,"name");
         Check.checkIsEmpty(firstName,"firstName");
@@ -19,11 +19,13 @@ public class Holder {
            throw new IllegalArgumentException("birthday in the future");
         }
         Check.checkIsEmpty(phone,"phone");
+        Check.checkIsEmpty(email,"email");
         
         this.name = name;
         this.firstName = firstName;
         this.date = date;
         this.phone = phone;
+        this.email = email;
         
     }
     
@@ -54,8 +56,28 @@ public class Holder {
     private Date today() {
         return Calendar.getInstance().getTime();
     }
+    
+    private void setName(String name) {
+        this.name = name;
+    }
+    
+    private void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    
+    private void setPhone(String phone) {
+        this.phone = phone;
+    }
+    
+    private void setEmail(String email) {
+        this.email = email;
+    }
    
-    private String name, firstName, phone; 
+    private void setDarte(Date date){
+        this.date = date;
+    }
+    
+    private String name, firstName, phone, email; 
     private Date date;
     private String line1, line2, postCode, city;
     

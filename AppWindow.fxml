@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TitledPane?>
+
+<TitledPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="jfxui.AppWindowController">
+    <content>
+        <AnchorPane>
+            <children>
+                <TextField layoutX="201.0" layoutY="134.0" text="To be implemented ... :-)" />
+            </children>
+        </AnchorPane>
+    </content>
+</TitledPane>

@@ -6,16 +6,13 @@
 package utils;
 
 import java.util.Date;
+import javafx.scene.control.Alert;
 
 /**
  *
  * @author Mary
  */
 public class Check {
-    
-    public Check() {
-        
-    }
     
     public static void checkIsNull(String field, String name) {
         if (field == null) {
@@ -32,6 +29,30 @@ public class Check {
     public static void checkIsNull(Date field, String name) {
         if (field == null) {
             throw new NullPointerException(String.format("%s cannot be null",name));
+        }
+    }
+    
+    public static void checkLetters(String field, String nameField) {    
+        if ( !Valid.isValidLetters(field, nameField) ) {
+            throw new IllegalArgumentException(String.format("%s is wrong",nameField));
+       }   
+    }
+   
+    public static void checkPhoneNumber(String phone) {
+        if ( !Valid.isValidPhoneNumber(phone) ) {
+            throw new IllegalArgumentException("phone is wrong");
+        }
+    }
+    
+    public static void checkEmail(String email) {
+        if ( !Valid.isValidEmail(email) ) {
+            throw new IllegalArgumentException("email is wrong");
+        }
+    }
+    
+    public static void checkDate(String date) {
+        if (!Valid.isValidDate(date)) {
+           throw new IllegalArgumentException("date is wrong");
         }
     }
     
