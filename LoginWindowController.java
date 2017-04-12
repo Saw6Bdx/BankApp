@@ -27,27 +27,30 @@ public class LoginWindowController {
             stage.show();
             //Hide current window
             ((Node)(event.getSource())).getScene().getWindow().hide();
-            System.out.print("Pwd OK");
-            System.out.print("Login OK");
+            //System.out.print("Pwd OK");
+            //System.out.print("Login OK");
         }
         else{
             new Alert(AlertType.ERROR, "Login or pwd are invalid").showAndWait();
         }
     }
-        
-        /*Alert alert = new Alert(AlertType.CONFIRMATION, "Vous êtes sûr de vouloir quitter ?", ButtonType.OK, ButtonType.CANCEL);
-        Optional<ButtonType> result = alert.showAndWait();
-        if(result.isPresent() && result.get() == ButtonType.OK){
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(".fxml"));
-        }
-    }*/
+/*@FXML
+private void handleMenuFileQuit(ActionEvent event){
+    Alert alert = new Alert(AlertType.CONFIRMATION, "Vous êtes sûr de vouloir quitter ?", ButtonType.OK, ButtonType.CANCEL);
+    Optional<ButtonType> result = alert.showAndWait();
+    if(result.isPresent() && result.get() == ButtonType.OK){
+    Platform.exit();
+    }
+}*/
         
     @FXML
-    private void handleLoginWindowCreate(ActionEvent event){
-        /*Alert alert = new Alert(AlertType.CONFIRMATION, "Vous êtes sûr de vouloir quitter ?", ButtonType.OK, ButtonType.CANCEL);
-        Optional<ButtonType> result = alert.showAndWait();
-        if(result.isPresent() && result.get() == ButtonType.OK){
-        
-        }*/
+    private void handleLoginWindowCreate(ActionEvent event) throws IOException{
+            TitledPane loader = (TitledPane)FXMLLoader.load(getClass().getResource("NewUserWindow.fxml"));
+            Scene scene = new Scene(loader);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.show();
+            //Hide current window
+            ((Node)(event.getSource())).getScene().getWindow().hide();
     }
 }
