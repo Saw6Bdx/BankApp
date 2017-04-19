@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -22,16 +21,10 @@ import javax.persistence.Persistence;
 public class AppWindowController extends ControllerBase{
     @FXML
     private AnchorPane content;
+    private AnchorPane about;
     
     @Override
     public void initialize(Mediator mediator){
-        /*try{
-            //Le mettre dans 'content'
-            //content.getChildren().setAll(loadFxml("TransactionsWindow.fxml"));
-	}
-	catch(IOException e){
-            
-	}*/
     }
 
     @FXML
@@ -39,7 +32,7 @@ public class AppWindowController extends ControllerBase{
         this.emf = Persistence.createEntityManagerFactory("BankAppPU");
         this.mediator = new Mediator(this.emf);
         
-        Scene scene = new Scene(ControllerBase.loadFxml("AppWindow.fxml", mediator));
+        Scene scene = new Scene(ControllerBase.loadFxml("LoginWindow.fxml", mediator));
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
@@ -70,11 +63,8 @@ public class AppWindowController extends ControllerBase{
         this.emf = Persistence.createEntityManagerFactory("BankAppPU");
         this.mediator = new Mediator(this.emf);
         
-        //Scene scene = new Scene(ControllerBase.loadFxml("TransactionsWindow.fxml", mediator));
         content.getChildren().setAll(loadFxml("TransactionsWindow.fxml"));// appeler le TransactionsWindow du compte correspondant au bouton
-        //Stage stage = new Stage();
-        //stage.setScene(scene);
-        //stage.show();
+        //about.getChildren().setAll(loadFxml("AboutWindow.fxml"));
     }
     
     @FXML
@@ -82,11 +72,8 @@ public class AppWindowController extends ControllerBase{
         this.emf = Persistence.createEntityManagerFactory("BankAppPU");
         this.mediator = new Mediator(this.emf);
         
-        Scene scene = new Scene(ControllerBase.loadFxml("TransactionsWindow.fxml", mediator));
-        // appeler le TransactionsWindow du compte correspondant au bouton
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.show();
+        content.getChildren().setAll(loadFxml("TransactionsWindow.fxml"));
+        //about.getChildren().setAll(loadFxml("AboutWindow.fxml"));
     }
     
     private Mediator mediator = null;
