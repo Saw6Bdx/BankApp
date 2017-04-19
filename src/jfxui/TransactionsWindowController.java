@@ -1,43 +1,51 @@
 package jfxui;
 
-import java.io.IOException;
-import javafx.event.ActionEvent;
+import db.home.bank.Transactions;
+import java.util.List;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
-import javafx.stage.Stage;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TableView;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 /**
  *
  * @author Nicolas
  */
 public class TransactionsWindowController extends ControllerBase{
+    @FXML private TableView<Transactions> listTransactions;
+    @FXML private ChoiceBox<Transactions> monthChooser;
     
     @Override
     public void initialize(Mediator mediator){
+        EntityManager em = mediator.createEntityManager();
+        //TypedQuery<Transactions> q = em.createQuery("SELECT t FROM Transactions t WHERE t.Account.Id =:acc", Transactions.class);
+        //q.setParameter("acc", 2).getResultList();
+        List<Transactions> transactions = em.createQuery("SELECT t FROM Transactions t", Transactions.class).getResultList();
+        //List<Transactions> calendar = em.createQuery("SELECT ");
+        // Remplissage du tableview avec transactions
+        //this.monthChooser.setItems(FXCollections.observableList(calendar));
+	this.listTransactions.setItems(FXCollections.observableList(transactions));
+        //this.listTransactions.setItems(FXCollections.observableList(q));
     }
-	
-    /*@FXML
-    private void handleLoginWindowLogin(ActionEvent event) throws IOException{
-        if(labelLogin.getText().equals("Login") && labelPassword.getText().equals("26929999")){
-            TitledPane loader = (TitledPane)FXMLLoader.load(getClass().getResource("FXML.fxml"));
-            Scene scene = new Scene(loader);
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.show();
-            //Hide current window
-            ((Node)(event.getSource())).getScene().getWindow().hide();
-            //System.out.print("Pwd OK");
-            //System.out.print("Login OK");
+    
+    private String formatDate(String date){
+        String[] parts = date.split(" ");
+        String result = "";
+        for (int i = parts.length - 1 ; i >= 0 ; i-- ) {
+            result = result.concat(parts[i]);
+            if (i != 0 ) {
+                result = result.concat("-");
+            }
         }
-        else{
-            new Alert(Alert.AlertType.ERROR, "Login or pwd are invalid").showAndWait();
-        }
-    } */      
+        System.out.println(result);
+        return result;
+    }
+    
+    public String formatAmount(){
+        return result;
+    }
 
 }
