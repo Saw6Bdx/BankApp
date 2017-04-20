@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 
 public abstract class ControllerBase {
 	private Mediator mediator = null;
+        private Parent parent = null;
 	
 	public abstract void initialize(Mediator mediator);
 	
@@ -39,5 +40,18 @@ public abstract class ControllerBase {
 		controller.initMediator(mediator);
 		return root;
 	}
+        
+        public static ControllerBase loadFxmlBis(String fxml, Mediator mediator) throws IOException{
+		FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxml));
+		Parent root = (Parent)loader.load();
+		ControllerBase controller = loader.getController();
+		controller.parent = root;
+		controller.initMediator(mediator);
+		return controller;
+	}
+        
+        public Parent getParent(){
+            return this.parent;
+        }
 
 }
