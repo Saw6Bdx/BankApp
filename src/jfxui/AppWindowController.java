@@ -19,9 +19,8 @@ import javax.persistence.Persistence;
  */
 
 public class AppWindowController extends ControllerBase{
-    @FXML
-    private AnchorPane content;
-    private AnchorPane about;
+    @FXML private AnchorPane content;
+    @FXML private AnchorPane contact;
     
     @Override
     public void initialize(Mediator mediator){
@@ -63,8 +62,15 @@ public class AppWindowController extends ControllerBase{
         this.emf = Persistence.createEntityManagerFactory("BankAppPU");
         this.mediator = new Mediator(this.emf);
         
-        content.getChildren().setAll(loadFxml("TransactionsWindow.fxml"));// appeler le TransactionsWindow du compte correspondant au bouton
-        //about.getChildren().setAll(loadFxml("AboutWindow.fxml"));
+        TransactionsWindowController controller = (TransactionsWindowController)ControllerBase.loadFxmlBis(
+                "TransactionsWindow.fxml",
+                this.mediator
+        );
+        controller.setFlagAccountType("Current");
+        controller.initTransactionsWindowController(this.mediator);
+        
+        content.getChildren().setAll(controller.getParent());
+        contact.getChildren().setAll(controller.getParent());
     }
     
     @FXML
@@ -72,8 +78,15 @@ public class AppWindowController extends ControllerBase{
         this.emf = Persistence.createEntityManagerFactory("BankAppPU");
         this.mediator = new Mediator(this.emf);
         
-        content.getChildren().setAll(loadFxml("TransactionsWindow.fxml"));
-        //about.getChildren().setAll(loadFxml("AboutWindow.fxml"));
+        TransactionsWindowController controller = (TransactionsWindowController)ControllerBase.loadFxmlBis(
+                "TransactionsWindow.fxml",
+                this.mediator
+        );
+        controller.setFlagAccountType("Savings");
+        controller.initTransactionsWindowController(this.mediator);
+        
+        content.getChildren().setAll(controller.getParent());
+        contact.getChildren().setAll(controller.getParent());
     }
     
     private Mediator mediator = null;

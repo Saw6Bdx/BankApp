@@ -1,13 +1,11 @@
 package jfxui;
 
 import db.home.bank.Transactions;
-import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
@@ -18,20 +16,33 @@ public class TransactionsWindowController extends ControllerBase{
     @FXML private TableView<Transactions> listTransactions;
     @FXML private ChoiceBox<Transactions> monthChooser;
     
-    @Override
-    public void initialize(Mediator mediator){
-        EntityManager em = mediator.createEntityManager();
-        //TypedQuery<Transactions> q = em.createQuery("SELECT t FROM Transactions t WHERE t.Account.Id =:acc", Transactions.class);
-        //q.setParameter("acc", 2).getResultList();
-        List<Transactions> transactions = em.createQuery("SELECT t FROM Transactions t", Transactions.class).getResultList();
-        //List<Transactions> calendar = em.createQuery("SELECT ");
-        // Remplissage du tableview avec transactions
-        //this.monthChooser.setItems(FXCollections.observableList(calendar));
-	this.listTransactions.setItems(FXCollections.observableList(transactions));
-        //this.listTransactions.setItems(FXCollections.observableList(q));
+    private String flagAccountType;
+    
+    /**
+     * @param Current or Savings 
+     */
+    public void setFlagAccountType(String flagAccountType) {
+        this.flagAccountType = flagAccountType;
     }
     
-    private String formatDate(String date){
+    @Override
+    public void initialize(Mediator mediator){
+    }
+    
+    public void initTransactionsWindowController(Mediator mediator) {
+        if (flagAccountType.equals("Current")) {
+            EntityManager em = mediator.createEntityManager();
+            TypedQuery<Transactions> q = em.createQuery("SELECT t FROM Transactions t WHERE t.idAccount.id =:acc", Transactions.class);
+            this.listTransactions.setItems(FXCollections.observableList(q.setParameter("acc",  1).getResultList()));
+        }
+        else { // Savings
+            EntityManager em2 = mediator.createEntityManager();
+            TypedQuery<Transactions> q2 = em2.createQuery("SELECT t FROM Transactions t WHERE t.idAccount.id =:acc", Transactions.class);
+            this.listTransactions.setItems(FXCollections.observableList(q2.setParameter("acc", 2).getResultList()));
+        }
+    }
+    
+    /*private String formatDate(String date){
         String[] parts = date.split(" ");
         String result = "";
         for (int i = parts.length - 1 ; i >= 0 ; i-- ) {
@@ -44,8 +55,16 @@ public class TransactionsWindowController extends ControllerBase{
         return result;
     }
     
-    public String formatAmount(){
+    public String formatAmount(String amount){
+        String[] parts = amount.split(".");
+        String result = "";
+        for (int i = parts.length - 1 ; i >= 0 ; i-- ) {
+            result = result.concat(parts[i]);
+            if (i != 0 ) {
+                result = result.concat(",");
+            }
+        }
         return result;
-    }
+    }*/
 
 }
