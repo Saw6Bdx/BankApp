@@ -19,7 +19,8 @@ public class TransactionsWindowController extends ControllerBase{
     private String flagAccountType;
     
     /**
-     * @param Current or Savings 
+     * 
+     * @param flagAccountType Current or Savings
      */
     public void setFlagAccountType(String flagAccountType) {
         this.flagAccountType = flagAccountType;
@@ -27,14 +28,21 @@ public class TransactionsWindowController extends ControllerBase{
     
     @Override
     public void initialize(Mediator mediator){
+        EntityManager em = mediator.createEntityManager();
+        this.monthChooser.setItems(FXCollections.observableArrayList("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "Novemeber", "December"));
+        
+        //TypedQuery<Transactions> q = em.createQuery("SELECT t FROM Transactions t WHERE t.idAccount.id =:acc", Transactions.class);
+        //this.monthChooser.setItems(FXCollections.observableList(q.setParameter("acc",  1).getResultList()));
+        
     }
     
-    public void initTransactionsWindowController(Mediator mediator) {
+    public void initTransactionsWindowController(Mediator mediator){
         if (flagAccountType.equals("Current")) {
             EntityManager em = mediator.createEntityManager();
             TypedQuery<Transactions> q = em.createQuery("SELECT t FROM Transactions t WHERE t.idAccount.id =:acc", Transactions.class);
             this.listTransactions.setItems(FXCollections.observableList(q.setParameter("acc",  1).getResultList()));
-        }
+        }       
+        
         else { // Savings
             EntityManager em2 = mediator.createEntityManager();
             TypedQuery<Transactions> q2 = em2.createQuery("SELECT t FROM Transactions t WHERE t.idAccount.id =:acc", Transactions.class);
@@ -53,9 +61,9 @@ public class TransactionsWindowController extends ControllerBase{
         }
         System.out.println(result);
         return result;
-    }
+    }*/
     
-    public String formatAmount(String amount){
+    /*public String formatAmount(String amount){
         String[] parts = amount.split(".");
         String result = "";
         for (int i = parts.length - 1 ; i >= 0 ; i-- ) {
