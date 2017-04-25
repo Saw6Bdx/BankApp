@@ -19,6 +19,9 @@ import projetJava.RibIban;
 public class MainTest {
   public static void main(String[] args) throws ParseException {
     java.util.Date fecha = new java.util.Date("Mon Dec 15 00:00:00 CST 2014");
+    /* Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+String s = formatter.format(date); // où date est this.date de la classe Transactions
+    */
     DateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US);
     Date date;
     date = (Date)formatter.parse(fecha.toString());
